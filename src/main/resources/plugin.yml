@@ -1,0 +1,10 @@
+name: CustomWeapons
+version: ${project.version}
+main: com.github.syuchan1005.customweapons.CustomWeapons
+authors: [syuchan1005]
+website: https://twitter.com/syu_chan_1005
+
+commands:
+ customweapons:
+  description: CustomWeapons Command.
+  aliases: cw
