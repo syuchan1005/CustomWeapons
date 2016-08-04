@@ -9,7 +9,9 @@ import org.bukkit.inventory.ItemStack;
 public interface Model {
 	String getDisplayName();
 
-	ItemStack getItemStack();
+	ItemStack getMaterialItemStack();
+
+	ItemStack getResultItemStack();
 
 	double getAttackDamage();
 

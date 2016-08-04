@@ -24,7 +24,7 @@ public class WorkBenchHolder implements InventoryHolder {
 
 	@Override
 	public Inventory getInventory() {
-		return getWorkbenchType().getInventory();
+		return getWorkbenchType().getInventory(this);
 	}
 
 	public WorkBenchType getWorkbenchType() {

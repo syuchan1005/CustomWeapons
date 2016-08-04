@@ -9,7 +9,9 @@ import org.bukkit.inventory.ItemStack;
 public abstract class BladeModel implements Model {
 	public abstract String getDisplayName();
 
-	public abstract ItemStack getItemStack();
+	public abstract ItemStack getMaterialItemStack();
+
+	public abstract ItemStack getResultItemStack();
 
 	public abstract double getAttackDamage();
 

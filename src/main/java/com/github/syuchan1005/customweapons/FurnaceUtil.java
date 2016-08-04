@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
  */
 public class FurnaceUtil {
 	private static Method tileEntityFurnaceMethod;
-	private static Method getNameMethod, setNameMethod;
+	private static Method getNameMethod, setNameMethod, updateMethod;
 
 	public static String getInventoryName(Furnace furnace) throws ReflectiveOperationException {
 		Object tileEntityFurnace = getTileEntityFurnace(furnace);
@@ -21,6 +21,11 @@ public class FurnaceUtil {
 		Object tileEntityFurnace = getTileEntityFurnace(furnace);
 		if(setNameMethod == null) setNameMethod = tileEntityFurnace.getClass().getMethod("a", String.class);
 		setNameMethod.invoke(tileEntityFurnace, title);
+	}
+
+	public static void update(Furnace furnace) throws ReflectiveOperationException{
+		if(updateMethod == null) updateMethod = furnace.getClass().getMethod("update", boolean.class, boolean.class);
+		updateMethod.invoke(furnace, true, true);
 	}
 
 	private static Object getTileEntityFurnace(Furnace furnace) throws ReflectiveOperationException {

@@ -9,7 +9,9 @@ import org.bukkit.inventory.ItemStack;
 public abstract class RodModel implements Model {
 	public abstract String getDisplayName();
 
-	public abstract ItemStack getItemStack();
+	public abstract ItemStack getMaterialItemStack();
+
+	public abstract ItemStack getResultItemStack();
 
 	public double getAttackDamage() { return 0D; };
 

@@ -1,5 +1,6 @@
 package com.github.syuchan1005.customweapons;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,6 +14,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class WorkBenchListener implements Listener {
 		List<String> lore = itemInHand.getItemMeta().getLore();
 		FurnaceUtil.setInventoryName(blockPlaced, "Custom Weapons" + ":" +
 				lore.get(1).substring(6) + ":" + lore.get(2).substring(6));
+		FurnaceUtil.update(blockPlaced);
 	}
 
 	@EventHandler
@@ -43,7 +46,7 @@ public class WorkBenchListener implements Listener {
 		block.setType(Material.AIR);
 		Location location = block.getLocation();
 		if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-			location.getWorld().dropItemNaturally(location, WorkBenchItemStacks.getWorkBench(WorkBenchType.valueOf(split[1]), Integer.parseInt(split[2])));
+			location.getWorld().dropItem(location, WorkBenchItemStacks.getWorkBench(WorkBenchType.valueOf(split[1]), Integer.parseInt(split[2])));
 		}
 	}
 
