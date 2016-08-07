@@ -13,11 +13,11 @@ public abstract class GuardModel implements Model {
 
 	public abstract ItemStack getResultItemStack();
 
-	public double getAttackDamage() { return 0D; };
+	public double getAttackDamage() { return 0D; }
 
 	public abstract double getDurability() ;
 
-	public double getModifier() { return 0D; };
+	public double getModifier() { return 0D; }
 
-	public ModelType getModelType() { return ModelType.GUARD; };
+	public ModelType getModelType() { return ModelType.GUARD; }
 }

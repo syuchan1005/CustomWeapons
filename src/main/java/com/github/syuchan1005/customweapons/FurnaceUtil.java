@@ -37,31 +37,40 @@ public class FurnaceUtil {
 
 		Object nbtTagCompound = nbtTagCompoundConstructor.newInstance();
 		saveMethod.invoke(tileEntityFurnace, nbtTagCompound);
-		setString(nbtTagCompound, "CustomName", title);
+		setCustomName(nbtTagCompound, title);
 		aMethod.invoke(tileEntityFurnace, nbtTagCompound);
 		setTileEntityFurnace(furnace, tileEntityFurnace);
 		reg(location);
 	}
 
-	public static void reg(Location location) throws ReflectiveOperationException {
+	private static void reg(Location location) throws ReflectiveOperationException {
 		if (getHandleMethod == null) getHandleMethod = location.getWorld().getClass().getMethod("getHandle");
 		if (blockPositionConstructor == null) blockPositionConstructor = Class.forName(getNMSPackageName() + ".BlockPosition").getConstructor(double.class, double.class, double.class);
 		Object world = getHandleMethod.invoke(location.getWorld());
 		if (getTypeMethod == null) getTypeMethod = world.getClass().getMethod("getType", blockPositionConstructor.getDeclaringClass());
 		Object blockPosition = blockPositionConstructor.newInstance(location.getX(), location.getY(), location.getZ());
 		Object iBlockData = getTypeMethod.invoke(world, blockPosition);
-		if (getBlockMethod == null) getBlockMethod = iBlockData.getClass().getMethod("getBlock");
-		worldUpdate(world, blockPosition, getBlockMethod.invoke(iBlockData));
+		if (getBlockMethod == null) {
+			getBlockMethod = iBlockData.getClass().getMethod("getBlock");
+			getBlockMethod.setAccessible(true);
+		}
+		Object block = getBlockMethod.invoke(iBlockData);
+		worldUpdate(world, blockPosition, block);
 		worldNotify(world, blockPosition, iBlockData);
 	}
 
-	public static void worldUpdate(Object world, Object blockPosition, Object block) throws ReflectiveOperationException {
-		if (updateMethod == null) updateMethod = world.getClass().getMethod("update", blockPosition.getClass(), block.getClass());
+	private static void worldUpdate(Object world, Object blockPosition, Object block) throws ReflectiveOperationException {
+		if (updateMethod == null) {
+			updateMethod = world.getClass().getMethod("update", blockPosition.getClass(), Class.forName(getNMSPackageName() + ".Block"));
+		}
 		updateMethod.invoke(world, blockPosition, block);
 	}
 
-	public static void worldNotify(Object world, Object blockPosition, Object iBlockData) throws ReflectiveOperationException {
-		if (notifyMethod == null) notifyMethod = world.getClass().getMethod("notify", blockPosition.getClass(), iBlockData.getClass(), iBlockData.getClass(), int.class);
+	private static void worldNotify(Object world, Object blockPosition, Object iBlockData) throws ReflectiveOperationException {
+		if (notifyMethod == null) {
+			Class<?> iBlockDataClass = Class.forName(getNMSPackageName() + ".IBlockData");
+			notifyMethod = world.getClass().getMethod("notify", blockPosition.getClass(), iBlockDataClass, iBlockDataClass, int.class);
+		}
 		notifyMethod.invoke(world, blockPosition, iBlockData, iBlockData, 3);
 	}
 
@@ -80,16 +89,16 @@ public class FurnaceUtil {
 		tileEntityFurnaceField.set(furnace, tileEntityFurnace);
 	}
 
-	public static String getNMSPackageName() {
+	private static String getNMSPackageName() {
 		return getOBCPackageName().replace("org.bukkit.craftbukkit", "net.minecraft.server");
 	}
 
-	public static String getOBCPackageName() {
+	private static String getOBCPackageName() {
 		return Bukkit.getServer().getClass().getPackage().getName();
 	}
 
-	public static void setString(Object nbtTagCompound, String name, String value) throws ReflectiveOperationException {
+	private static void setCustomName(Object nbtTagCompound, String value) throws ReflectiveOperationException {
 		if(setStringMethod == null) setStringMethod = nbtTagCompound.getClass().getMethod("setString", String.class, String.class);
-		setStringMethod.invoke(nbtTagCompound, name, value);
+		setStringMethod.invoke(nbtTagCompound, "CustomName", value);
 	}
 }

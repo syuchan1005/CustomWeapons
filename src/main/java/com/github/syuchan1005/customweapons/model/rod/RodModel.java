@@ -13,11 +13,11 @@ public abstract class RodModel implements Model {
 
 	public abstract ItemStack getResultItemStack();
 
-	public double getAttackDamage() { return 0D; };
+	public double getAttackDamage() { return 0D; }
 
 	public abstract double getDurability();
 
 	public abstract double getModifier();
 
-	public ModelType getModelType() { return ModelType.ROD; };
+	public ModelType getModelType() { return ModelType.ROD; }
 }

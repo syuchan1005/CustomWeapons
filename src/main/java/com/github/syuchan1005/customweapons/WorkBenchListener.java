@@ -1,6 +1,5 @@
 package com.github.syuchan1005.customweapons;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,15 +23,22 @@ import java.util.List;
 public class WorkBenchListener implements Listener {
 
 	@EventHandler
-	public void onPlace(BlockPlaceEvent event) throws ReflectiveOperationException {
+	public void onPlace(final BlockPlaceEvent event) throws ReflectiveOperationException {
 		ItemStack itemInHand = event.getItemInHand();
-		WorkBenchType workBench = WorkBenchItemStacks.isWorkBench(itemInHand);
-		if (workBench == null) return;
-		Furnace blockPlaced = (Furnace) event.getBlockPlaced().getState();
-		List<String> lore = itemInHand.getItemMeta().getLore();
-		FurnaceUtil.setInventoryName(blockPlaced, "Custom Weapons" + ":" +
-				lore.get(1).substring(6) + ":" + lore.get(2).substring(6));
-		FurnaceUtil.update(blockPlaced);
+		if (!WorkBenchManager.isWorkBench(itemInHand)) return;
+		final Furnace furnace = (Furnace) event.getBlockPlaced().getState();
+		final List<String> lore = itemInHand.getItemMeta().getLore();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+					FurnaceUtil.setInventoryName(event.getBlockPlaced().getLocation(), furnace, "Custom Weapons" + ":" +
+							lore.get(1).substring(6) + ":" + lore.get(2).substring(6));
+				} catch (ReflectiveOperationException e) {
+					e.printStackTrace();
+				}
+			}
+		}.runTaskLater(CustomWeapons.getInstance(), 2L);
 	}
 
 	@EventHandler
@@ -46,7 +52,7 @@ public class WorkBenchListener implements Listener {
 		block.setType(Material.AIR);
 		Location location = block.getLocation();
 		if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-			location.getWorld().dropItem(location, WorkBenchItemStacks.getWorkBench(WorkBenchType.valueOf(split[1]), Integer.parseInt(split[2])));
+			location.getWorld().dropItem(location, WorkBenchManager.getWorkBenchStack(WorkBenchManager.getWorkBench(split[1]), Integer.parseInt(split[2])));
 		}
 	}
 
@@ -67,6 +73,6 @@ public class WorkBenchListener implements Listener {
 	private static WorkBenchHolder getWorkBenchHolder(String title) {
 		String[] split = title.split(":");
 		if (split.length != 3 || !split[0].equals("Custom Weapons")) return null;
-		return new WorkBenchHolder(WorkBenchType.valueOf(split[1]), Integer.parseInt(split[2]));
+		return new WorkBenchHolder(WorkBenchManager.getWorkBench(split[1]), Integer.parseInt(split[2]));
 	}
 }

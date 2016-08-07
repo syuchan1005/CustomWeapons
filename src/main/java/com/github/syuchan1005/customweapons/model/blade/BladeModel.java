@@ -17,9 +17,9 @@ public abstract class BladeModel implements Model {
 
 	public abstract double getDurability();
 
-	public double getModifier() { return 0D; };
+	public double getModifier() { return 0D; }
 
-	public ModelType getModelType() { return ModelType.BLADE; };
+	public ModelType getModelType() { return ModelType.BLADE; }
 
 	public abstract Display getDisplayModel();
 

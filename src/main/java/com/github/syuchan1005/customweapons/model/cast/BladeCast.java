@@ -1,18 +1,15 @@
 package com.github.syuchan1005.customweapons.model.cast;
 
-import com.github.syuchan1005.customweapons.ModelManager;
 import com.github.syuchan1005.customweapons.model.Model;
-import com.github.syuchan1005.customweapons.model.blade.BladeModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by syuchan on 2016/08/03.
  */
 public class BladeCast extends CastModel {
-	private List<Model> materialModel;
+	private static List<Model> materialModel;
 
 	public BladeCast() {
 		this.materialModel = new ArrayList<>();
